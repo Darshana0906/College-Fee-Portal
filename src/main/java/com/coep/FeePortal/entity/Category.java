@@ -1,6 +1,7 @@
 package com.coep.FeePortal.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "categories")
@@ -10,6 +11,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Category name cannot be blank")
     @Column(nullable = false, unique = true)
     private String name;
 

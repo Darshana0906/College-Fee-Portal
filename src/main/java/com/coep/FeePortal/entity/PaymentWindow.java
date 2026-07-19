@@ -1,6 +1,7 @@
 package com.coep.FeePortal.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 @Entity
@@ -11,15 +12,19 @@ public class PaymentWindow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Year of study cannot be null")
     @Column(name = "year_of_study", nullable = false)
     private Integer yearOfStudy; // 1 (FY), 2 (SY), 3 (TY), 4 (Final Year)
 
+    @NotBlank(message = "Academic year cannot be blank")
     @Column(name = "academic_year", nullable = false)
     private String academicYear; // e.g., "2024-2025"
 
+    @NotNull(message = "Start date cannot be null")
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
+    @NotNull(message = "End date cannot be null")
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 

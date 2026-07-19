@@ -12,6 +12,7 @@ import com.coep.FeePortal.service.WindowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ public class AdminController {
     @Autowired private PaymentService paymentService;
 
     @PostMapping("/categories")
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category) {
         return ResponseEntity.ok(categoryRepository.save(category));
     }
 

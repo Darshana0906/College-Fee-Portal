@@ -4,6 +4,7 @@ import com.coep.FeePortal.entity.FeeRecord;
 import com.coep.FeePortal.entity.Receipt;
 import com.coep.FeePortal.entity.Transaction;
 import com.coep.FeePortal.repository.ReceiptRepository;
+import com.coep.FeePortal.repository.TransactionRepository;
 import com.coep.FeePortal.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +25,9 @@ public class PaymentController {
     @Autowired
     private ReceiptRepository receiptRepository;
 
+    @Autowired
+    private TransactionRepository transactionRepository;
+
     /**
      * Simulate student payment.
      * Body: { "scholarshipAmount": 10000 }  (optional; defaults to 0 if absent)
@@ -41,10 +45,18 @@ public class PaymentController {
         return ResponseEntity.ok(transaction);
     }
 
-    @GetMapping("/receipts/{transactionId}/download")
-    public ResponseEntity<byte[]> downloadReceipt(@PathVariable Long transactionId) {
-        Receipt receipt = receiptRepository.findByTransactionId(transactionId)
-                .orElseThrow(() -> new RuntimeException("Receipt not found"));
+    @GetMapping("/receipts/{feeRecordId}/download")
+    public ResponseEntity<byte[]> downloadReceipt(@PathVariable Long feeRecordId) {
+        java.util.Optional<Transaction> transactionOpt = transactionRepository.findByFeeRecordId(feeRecordId);
+        if (transactionOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        java.util.Optional<Receipt> receiptOpt = receiptRepository.findByTransactionId(transactionOpt.get().getId());
+        if (receiptOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Receipt receipt = receiptOpt.get();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);

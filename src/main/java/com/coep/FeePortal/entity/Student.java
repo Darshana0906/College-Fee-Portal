@@ -1,6 +1,7 @@
 package com.coep.FeePortal.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "students")
@@ -10,23 +11,30 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name cannot be blank")
     @Column(nullable = false)
     private String name;
 
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Invalid email format")
     @Column(nullable = false, unique = true)
     private String email;
 
     /** BCrypt-hashed password — never stored as plain text */
+    @NotBlank(message = "Password cannot be blank")
     @Column(nullable = false)
     private String password;
 
+    @NotBlank(message = "Course cannot be blank")
     @Column(nullable = false)
     private String course;
 
+    @NotNull(message = "Admission year cannot be null")
     @Column(name = "admission_year", nullable = false)
     private Integer admissionYear;
 
     /** STUDENT or ADMIN */
+    @NotBlank(message = "Role cannot be blank")
     @Column(nullable = false)
     private String role = "STUDENT";
 

@@ -1,6 +1,7 @@
 package com.coep.FeePortal.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
 @Entity
@@ -17,27 +18,34 @@ public class FeeStructure {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @NotBlank(message = "Academic year cannot be blank")
     @Column(name = "academic_year", nullable = false)
     private String academicYear; // e.g., "2025-2026"
 
+    @NotNull(message = "Year of study cannot be null")
     @Column(name = "year_of_study", nullable = false)
     private Integer yearOfStudy; // 1=FY, 2=SY, 3=TY, 4=Final Year
 
     // ===== Fee Components =====
 
+    @NotNull(message = "Tuition fee cannot be null")
     @Column(name = "tuition_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal tuitionFee = BigDecimal.ZERO;
 
+    @NotNull(message = "Development fee cannot be null")
     @Column(name = "development_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal developmentFee = BigDecimal.ZERO;
 
+    @NotNull(message = "Other fee cannot be null")
     @Column(name = "other_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal otherFee = BigDecimal.ZERO;
 
+    @NotNull(message = "Exam fee cannot be null")
     @Column(name = "exam_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal examFee = BigDecimal.ZERO;
 
     // Alumni Association Fee (Rs. 750) + Disaster Relief Fund Fee (Rs. 10) = Rs. 760
+    @NotNull(message = "Miscellaneous fee cannot be null")
     @Column(name = "miscellaneous_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal miscellaneousFee = BigDecimal.ZERO;
 
