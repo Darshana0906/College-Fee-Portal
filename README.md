@@ -1,6 +1,6 @@
 # College Fee Portal
 
-A robust, enterprise-grade College Fee Portal designed to streamline academic fee payments for students and administration. Built with a modern **Java/Spring Boot** backend and a dynamic **React/Vite** frontend.
+A College Fee Portal designed to streamline academic fee payments for students and administration. Built with a modern **Java/Spring Boot** backend and a dynamic **React/Vite** frontend.
 
 ## 🌟 Key Features
 
@@ -37,7 +37,6 @@ A robust, enterprise-grade College Fee Portal designed to streamline academic fe
 
 ### Prerequisites
 - [Java 21+](https://jdk.java.net/)
-- [Node.js](https://nodejs.org/) & npm
 - [MySQL Server](https://dev.mysql.com/downloads/mysql/)
 
 ### Local Setup Instructions
