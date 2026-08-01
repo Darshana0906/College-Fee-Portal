@@ -23,9 +23,20 @@ public class WindowService {
         PaymentWindow window = new PaymentWindow(yearOfStudy, academicYear, startDate, endDate);
         window = windowRepository.save(window);
 
+        // Parse the start year from academicYear (e.g., "2026-27" → 2026)
+        int academicStartYear = Integer.parseInt(academicYear.split("-")[0]);
+
         List<Student> students = studentRepository.findAll();
 
         for (Student student : students) {
+            // Compute this student's actual year of study based on their admission year
+            int computedYearOfStudy = academicStartYear - student.getAdmissionYear() + 1;
+
+            // Only create a FeeRecord if this student is actually in the target year of study
+            if (computedYearOfStudy != yearOfStudy || computedYearOfStudy < 1) {
+                continue;
+            }
+
             Optional<FeeRecord> existing = feeRecordRepository.findByStudentIdAndYearOfStudy(student.getId(), yearOfStudy);
             if (existing.isEmpty()) {
                 Optional<FeeStructure> feeStructOpt = feeStructureRepository.findByCategoryIdAndAcademicYearAndYearOfStudy(

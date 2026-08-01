@@ -85,22 +85,34 @@ public class AuthController {
         );
         student = studentRepository.save(student);
 
-        // Auto-generate fee record if an active window exists for Year 1
+        // Auto-generate fee record if an active window exists for this student's computed year of study
         Optional<PaymentWindow> activeWindow = windowRepository.findByYearOfStudyAndIsActiveTrue(1);
-        if (activeWindow.isPresent()) {
-            Optional<FeeStructure> feeStructOpt = feeStructureRepository.findByCategoryIdAndAcademicYearAndYearOfStudy(
-                    category.getId(), activeWindow.get().getAcademicYear(), 1);
 
-            if (feeStructOpt.isPresent()) {
-                FeeRecord record = new FeeRecord(
-                        student,
-                        activeWindow.get().getAcademicYear(),
-                        1, 1,
-                        feeStructOpt.get().getTotal(),
-                        activeWindow.get(),
-                        feeStructOpt.get()
-                );
-                feeRecordRepository.save(record);
+        // Check all possible year-of-study windows (1 through 4)
+        for (int yr = 1; yr <= 4; yr++) {
+            Optional<PaymentWindow> windowOpt = windowRepository.findByYearOfStudyAndIsActiveTrue(yr);
+            if (windowOpt.isPresent()) {
+                PaymentWindow window = windowOpt.get();
+                int academicStartYear = Integer.parseInt(window.getAcademicYear().split("-")[0]);
+                int computedYear = academicStartYear - request.getAdmissionYear() + 1;
+
+                if (computedYear == yr && computedYear > 0) {
+                    Optional<FeeStructure> feeStructOpt = feeStructureRepository.findByCategoryIdAndAcademicYearAndYearOfStudy(
+                            category.getId(), window.getAcademicYear(), computedYear);
+
+                    if (feeStructOpt.isPresent()) {
+                        FeeRecord record = new FeeRecord(
+                                student,
+                                window.getAcademicYear(),
+                                computedYear, computedYear,
+                                feeStructOpt.get().getTotal(),
+                                window,
+                                feeStructOpt.get()
+                        );
+                        feeRecordRepository.save(record);
+                    }
+                    break; // A student can only be in one year at a time
+                }
             }
         }
 
